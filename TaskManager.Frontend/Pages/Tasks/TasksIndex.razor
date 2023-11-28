@@ -1,0 +1,57 @@
+﻿@page "/tasks"
+@inject IRepository repository
+
+
+<h3>Tasks</h3>
+
+@if (tasks is null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <a class="btn btn-outline-primary" href="/tasks/create">New Task</a>
+
+
+    <table class="table ">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Date</th>
+                <th>IsComplete</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in tasks)
+            {
+                <tr>
+                    <td>@task.Description</td>
+                    <td>@task.Date</td>
+                    <td>@task.IsComplete</td>
+                    <td>
+                        <a href="/tasks/edit/@task.Id" class="btn btn-outline-warning">Edit</a>
+                        <button class="btn btn-outline-info">Complete</button>
+                        <button class="btn btn-outline-danger">Delete</button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+}
+
+@code {
+    public List<MyTask>? tasks { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.GetAsync<List<MyTask>>("api/mytasks");
+
+        if (responseHttp.IsSuccess)
+        {
+            tasks = responseHttp.Result;
+        }
+    }
+}
