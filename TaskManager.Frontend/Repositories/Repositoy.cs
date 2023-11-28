@@ -9,8 +9,8 @@ namespace TaskManager.Frontend.Repositories
         private readonly HttpClient _httpClient;
 
         private JsonSerializerOptions _jsonDefaultOptions => new()
-        { 
-            PropertyNameCaseInsensitive = true, 
+        {
+            PropertyNameCaseInsensitive = true,
         };
 
         public Repositoy(HttpClient httpClient)
@@ -20,7 +20,7 @@ namespace TaskManager.Frontend.Repositories
 
         public async Task<Response<T>> GetAsync<T>(string url)
         {
-           var responseHttp = await _httpClient.GetAsync(url);
+            var responseHttp = await _httpClient.GetAsync(url);
             if (!responseHttp.IsSuccessStatusCode)
             {
                 return new Response<T>
@@ -30,10 +30,10 @@ namespace TaskManager.Frontend.Repositories
                 };
             }
 
-            var responseString = await responseHttp.Content.ReadAsStringAsync(); 
-            var responseJson = JsonSerializer.Deserialize<T>(responseString, _jsonDefaultOptions);   
+            var responseString = await responseHttp.Content.ReadAsStringAsync();
+            var responseJson = JsonSerializer.Deserialize<T>(responseString, _jsonDefaultOptions);
 
-            return new Response<T> { IsSuccess = true, Result = responseJson }; 
+            return new Response<T> { IsSuccess = true, Result = responseJson };
 
         }
 
@@ -47,7 +47,7 @@ namespace TaskManager.Frontend.Repositories
             {
                 return new Response<T>
                 {
-                    IsSuccess= false,
+                    IsSuccess = false,
                     Message = "Fail to post object"
                 };
             }
@@ -55,7 +55,7 @@ namespace TaskManager.Frontend.Repositories
             var responseString = await resonseHttp.Content.ReadAsStringAsync();
             var responseJson = JsonSerializer.Deserialize<T>(responseString, _jsonDefaultOptions);
 
-            return new Response<T> { IsSuccess = true, Result = responseJson};
+            return new Response<T> { IsSuccess = true, Result = responseJson };
 
         }
 

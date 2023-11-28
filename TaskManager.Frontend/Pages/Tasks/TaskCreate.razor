@@ -1,9 +1,40 @@
 ﻿@page "/tasks/create"
+@inject IRepository repository
+@inject SweetAlertService sweeAlertService
+@inject NavigationManager navigationManager
+
 
 <h3>TaskCreate</h3>
 
-<a class="btn btn-outline-primary" href="/tasks">Return</a>
+<TaskForm myTask="myTask" OnValidSubmit="CreateAsync" ReturnAction="Return" />
 
 @code {
+    private MyTask myTask = new() { Date = DateTime.Now};
 
+    private async Task CreateAsync()
+    {
+        var responseHttp = await repository.PostAsync("api/mytasks/", myTask);
+
+        if (!responseHttp.IsSuccess)
+        {
+            await sweeAlertService.FireAsync("Error", responseHttp.Message, SweetAlertIcon.Error);
+            return;
+        }
+
+        Return();
+        var toast = sweeAlertService.Mixin(new SweetAlertOptions
+        {
+            Toast = true,
+            Position = SweetAlertPosition.TopEnd,
+            ShowCloseButton = true,
+            Timer = 3000
+        });
+
+        await toast.FireAsync(icon: SweetAlertIcon.Info, message: "Tasks created successfully");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/tasks");
+    }
 }

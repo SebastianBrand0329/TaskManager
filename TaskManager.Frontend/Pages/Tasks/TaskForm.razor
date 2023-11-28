@@ -1,0 +1,37 @@
+﻿<EditForm Model="myTask" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+
+    <div class="mb-3">
+        <label>Description:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@myTask!.Description"/>
+            <ValidationMessage For="@(() => myTask.Description)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Date:</label>
+        <div>
+            <InputDate class="form-control" @bind-Value="@myTask!.Date" />
+            <ValidationMessage For="@(() => myTask.Date)" />
+        </div>
+    </div>
+
+    <button class="btn btn-outline-primary" type="submit">Save</button>
+    <button class="btn btn-outline-success" @onclick="ReturnAction">Return</button>
+</EditForm>
+
+@code {
+
+    [EditorRequired]
+    [Parameter]
+    public MyTask? myTask { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+}
